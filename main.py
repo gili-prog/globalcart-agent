@@ -1,4 +1,4 @@
-from mock_agent import run_agent
+from agent import run_agent
 
 while True:
     customer_message = input("Enter customer message (or 'exit' to quit): ")
