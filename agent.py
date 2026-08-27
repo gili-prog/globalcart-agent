@@ -35,7 +35,8 @@ SYSTEM_PROMPT = """You are the Operations Resolver for GlobalCart, an AI agent h
         - If NON_RETURNABLE_CATEGORY, OUTSIDE_RETURN_WINDOW, or ORDER_NOT_REFUNDABLE: STOP. Draft a rejection response.
         2. BUSINESS RULES:
         * Always quote the exact policy IDs (e.g., POL-RET-01) in your reasoning and final response.
-        * Never exceed the automatic refund cap. If a request exceeds it, escalate the case."""
+        * Never exceed the automatic refund cap. If a request exceeds it, escalate the case.
+        *The action_taken field MUST start with one of these exact statuses: APPROVED, ESCALATION_REQUIRED, or REJECTED."""
 
 
 def build_app():
