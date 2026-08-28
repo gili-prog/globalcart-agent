@@ -6,6 +6,7 @@ from langchain_core.tools import tool
 from langchain_core.messages import SystemMessage, HumanMessage
 from langgraph.graph import MessagesState, StateGraph, START, END
 from langgraph.prebuilt import ToolNode, tools_condition
+from langchain_core.messages import trim_messages
 from mock_services import (
     check_return_policy,
     get_user_profile,
@@ -71,9 +72,18 @@ def build_app():
         messages_to_send = state["messages"] + [prompt_message]
         response = structured_llm.invoke(messages_to_send)
         return ({"final_response": response})
+    
+    trimmer = trim_messages(
+        max_tokens=1500, # המקסימום טוקנים שאנחנו מוכנים לשלוח
+        strategy="last", # שומר רק את ההודעות האחרונות והרלוונטיות
+        token_counter=llm, # משתמש במודל עצמו כדי לספור טוקנים במדויק
+        include_system=True, # שומר את פרומפט המערכת לעולם לא יימחק
+        allow_partial=False # לא חותך הודעות באמצע משפט
+    )
 
     def agent(state: dict) -> dict:
-        response = llm_with_tools.invoke(state["messages"])
+        trimmed_messages = trimmer.invoke(state["messages"])
+        response = llm_with_tools.invoke(trimmed_messages)
         return {"messages": response}
 
     workflow = StateGraph(AgentState)
