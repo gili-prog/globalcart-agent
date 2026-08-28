@@ -21,4 +21,4 @@ def test_agent_decisions(ticket, expected):
     result = run_agent(ticket)
     action_taken = result["final_response"].action_taken
     assert expected in str(action_taken), f"Expected {expected} but got {action_taken}"
-    time.sleep(10)  # Sleep for 10 seconds to avoid rate limiting
+    time.sleep(20)  # Sleep for 20 seconds to avoid rate limiting
