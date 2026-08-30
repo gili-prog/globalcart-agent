@@ -1,7 +1,5 @@
 import pytest
 from agent import run_agent
-import pytest
-from agent import run_agent
 import time
 
 @pytest.mark.parametrize("ticket,expected", [

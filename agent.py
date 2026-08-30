@@ -14,6 +14,24 @@ from mock_services import (
     process_refund
 )
 
+import warnings
+import  httpx
+import urllib3
+# 1. השתקת אזהרות אבטחה בטרמינל (כדי לשמור על פלט נקי)
+warnings.filterwarnings("ignore")
+urllib3.disable_warnings()
+
+# 2. Monkey Patching: מעקף מפורש לספריית httpx
+_original_client_init = httpx.Client.__init__
+
+def _patched_client_init(self, *args, **kwargs):
+    kwargs["verify"] = False
+    _original_client_init(self, *args, **kwargs)
+
+httpx.Client.__init__ = _patched_client_init
+
+
+
 class AgentResponse(BaseModel):
     reasoning_chain: str = Field(description="Detailed explanation of your decision and the policies applied.")
     action_taken: str = Field(description="Which tools were used and the final system outcome.")
